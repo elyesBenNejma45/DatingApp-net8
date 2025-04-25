@@ -1,6 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ export class RegisterComponent {
   model : any = {}
 //  usersFromHomeComponent = input.required<any>(); // a signal tthat we can make it required so we need to pass it from parent to child
  cancelRegister = output<boolean>(); 
- 
+ private toastr = inject(ToastrService) // only take strings messages from the back
  register(){
     this.accountService.register(this.model).subscribe({
       next : response => {
@@ -22,9 +23,11 @@ export class RegisterComponent {
         this.cancel();
       },
 
-      complete() {
-        console.log("user registred")
-      }
+      error : error => this.toastr.error(error.error), 
+
+      // complete() {
+      //   console.log("user registred")
+      // }
     })
   }
 
